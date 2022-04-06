@@ -101,8 +101,13 @@ app.post('/api/signup', async (req, res) => {
             return res.status(500).json({ error: 'Something is wrong' })
         }
     }
-
 })
+
+app.get('/api/logout', async (req, res) => {
+    res.clearCookie('session')
+    res.json({ message: 'ok' })
+})
+
 
 // require login
 app.use((req, res, next) => {
