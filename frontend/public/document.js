@@ -1,1 +1,0 @@
-var simplemde = new SimpleMDE();

@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useLocation } from "react-router-dom";
@@ -8,6 +7,7 @@ import { Navbar } from './components/Navbar'
 import { Document } from './components/Document'
 import { DocumentList } from './components/DocumentList'
 import { NewDocument } from './components/NewDocument'
+import { Home } from './components/Home'
 import { Login, Logout, Signup } from './components/Auth'
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -49,13 +49,13 @@ function App() {
     <Navbar />
 
     <Routes>
-      <Route path="/" element={<h1>home</h1>} />
+      <Route path="/" element={<Home />} />
       <Route path="/new" element={<NewDocument CSRFToken={CSRFToken} />} />
       <Route path="/login" element={<Login CSRFToken={CSRFToken} />} />
       <Route path="/signup" element={<Signup CSRFToken={CSRFToken} />} />
       <Route path="/logout" element={<Logout />} />
       <Route path="/document" element={<DocumentList documents={documents} error={errorFetchDoc} />} />
-      <Route path="/document/last" element={<Navigate to={documents?.length >= 1 ? '/document/' + documents[documents.length - 1].id : '/new'} />} />
+      <Route path="/document/last" element={<Navigate to={documents?.length >= 1 ? '/document/' + documents[documents.length - 1].id : '/document'} />} />
       <Route path="/document/:id" element={<Document CSRFToken={CSRFToken} />} />
     </Routes>
   </>

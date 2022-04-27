@@ -6,5 +6,15 @@ services:
       - "127.0.0.1:8080:80"
   backend:
     build: ./backend
+    environment:
+      - BOT_URL=http://bot:9999/visit
+      - WEBAPP_URL=http://nginx
+      - FLAG=ptm{test}
+      - ADMIN_PASSWORD=1f0b772d-4569-40a1-8ddf-d42b84f8aa1f
+  bot:
+    build: ./bot
     ports:
-      - "127.0.0.1:4000:4000"
+      - "127.0.0.1:9999:9999"
+    environment:
+      - WEBAPP_URL=http://nginx
+      - ADMIN_PASSWORD=1f0b772d-4569-40a1-8ddf-d42b84f8aa1f

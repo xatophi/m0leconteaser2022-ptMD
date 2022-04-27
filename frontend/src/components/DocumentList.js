@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { Error } from './Error';
+import { Message } from './Message';
 
 
 function DocumentList({ documents, error }) {
 
     if (error) {
-        return <Error errorMsg={error} />
+        return <Message msg={error} type='error' />
+
     }
 
     if (documents === undefined) {
@@ -16,11 +17,16 @@ function DocumentList({ documents, error }) {
         </>
     }
 
-    return <>
+    if (documents.length === 0) {
+        return <p className="text-center mt-3">Create your first document <Link to="/new">here</Link></p>
+    }
+
+    return <div className="mt-3 mx-4">
+        <p>Your documents:</p>
         <ul>
             {documents.map(doc => <li key={doc.id}><Link to={'/document/' + doc.id}>{doc.title}</Link></li>)}
         </ul>
-    </>
+    </div>
 }
 
 export { DocumentList }

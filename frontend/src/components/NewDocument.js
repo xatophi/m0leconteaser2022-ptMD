@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-import { Error } from './Error';
+import { Message } from './Message';
 
 function NewDocument({ CSRFToken }) {
 
@@ -21,7 +21,9 @@ function NewDocument({ CSRFToken }) {
         })
 
         if (r.status !== 200) {
-            setError("Creation failed")
+            const j = await r.json()
+            console.log(j)
+            setError(j.error || "Creation failed")
         } else {
             const { id } = await r.json()
             goToDocument(id)
@@ -29,13 +31,15 @@ function NewDocument({ CSRFToken }) {
     }
 
     return <>
-        <Error errorMsg={error} />
+        <Message msg={error} type='error' />
 
-        <h1>Create a new document</h1>
+        <p className="h2 text-center my-4 pb-3">Create a new document</p>
 
-        <form onSubmit={createNewDocument}>
-            <input type="text" id="title" placeholder="title" />
-            <button type="submit">Create</button>
+        <form className="mx-auto col-xl-3 col-lg-5 col-md-6 col-sm-8" onSubmit={createNewDocument}>
+            <div class="input-group mb-3">
+                <input className="form-control" type="text" id="title" placeholder="title" />
+                <button className="btn btn-primary" type="submit">Create</button>
+            </div>
         </form>
 
     </>

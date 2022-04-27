@@ -2,6 +2,7 @@ const express = require('express')
 const { v4: uuidv4 } = require('uuid')
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
+const fetch = require('cross-fetch')
 const csrf = require('csurf')
 require('express-async-errors')
 const sqlite3 = require('sqlite3')
@@ -24,7 +25,8 @@ let db = undefined;
     await db.exec('CREATE TABLE users (username VARCHAR(50), password VARCHAR(50), PRIMARY KEY (username))')
     await db.exec('CREATE TABLE documents (id VARCHAR(40), owner VARCHAR(50), title TEXT, data TEXT, PRIMARY KEY(id) )')
 
-    await db.exec('INSERT INTO users (username, password) VALUES ("xato", "password123")')
+    await db.run('INSERT INTO users (username, password) VALUES ("admin", ?)', [process.env.ADMIN_PASSWORD])
+    await db.run('INSERT INTO documents (id, owner, title, data) VALUES (?, "admin", "flag", ?)', [uuidv4(), process.env.FLAG])
 })
 
 app.use(express.json())
@@ -49,6 +51,12 @@ app.use((req, res, next) => {
             res.clearCookie('session')
         }
     }
+    next()
+})
+
+app.use((req, res, next) => {
+    // TODO lo lascio? non si dovrebbe poter exploitare senza ma sarebbe divertente
+    res.setHeader('X-Content-Type-Options', 'nosniff')
     next()
 })
 
@@ -137,6 +145,36 @@ app.post('/api/document/:id', async (req, res) => {
     return res.json({ message: 'done' })
 })
 
+app.post('/api/report/:id', async (req, res) => {
+
+    // TODO maybe captcha
+
+    const post = await db.get('SELECT id FROM documents WHERE id = ?', req.params.id)
+
+    if (!post) {
+        return res.status(404).json({ error: 'not found' })
+    }
+
+
+    try {
+        const link = process.env.WEBAPP_URL + '/document/' + post.id
+
+        const r = await fetch(process.env.BOT_URL, {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 'url': link })
+        }).then(r => r.text())
+        console.log(r)
+
+    } catch (error) {
+        return res.status(500).json({ error: 'Error: ' + error })
+    }
+
+    return res.json({ message: 'done' })
+})
+
 app.get('/api/document', async (req, res) => {
 
     const result = await db.all('SELECT id, title FROM documents WHERE owner = ?', req.loggedUser)
@@ -150,7 +188,7 @@ app.post('/api/document', async (req, res) => {
     const title = req.body.title
     const id = uuidv4()
 
-    if (typeof title !== 'string') {
+    if (typeof title !== 'string' || title.length > 100) {
         return res.status(400).json({ error: 'bad data' })
     }
 

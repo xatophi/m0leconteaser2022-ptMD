@@ -1,7 +1,7 @@
 import { useNavigate, Navigate } from "react-router-dom";
 import { useState } from "react";
 
-import { Error } from './Error';
+import { Message } from './Message';
 
 function Login({ CSRFToken }) {
 
@@ -30,16 +30,19 @@ function Login({ CSRFToken }) {
     }
 
     return <>
-        <Error errorMsg={error} />
+        <Message msg={error} type='error' />
 
-        <h1>Login</h1>
+        <p className="h2 text-center my-4 pb-3">Login</p>
 
-        <form onSubmit={submitLogin}>
-            <input type="text" id="username" placeholder="username" />
-            <input type="password" id="password" placeholder="password" />
-            <button type="submit" id="submit">Login</button>
+        <form className="mx-auto col-xl-3 col-lg-5 col-md-6 col-sm-8" onSubmit={submitLogin}>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="username" placeholder="username" />
+            </div>
+            <div class="mb-3">
+                <input type="password" class="form-control" id="password" placeholder="password" minLength="6" />
+            </div>
+            <button type="submit" class="btn btn-primary mx-auto" id="submit" style={{ display: 'block', width: '100%' }}>Login</button>
         </form>
-
     </>
 }
 
@@ -70,16 +73,19 @@ function Signup({ CSRFToken }) {
     }
 
     return <>
-        <Error errorMsg={error} />
+        <Message msg={error} type='error' />
 
-        <h1>Signup</h1>
+        <p className="h2 text-center my-4 pb-3">Signup</p>
 
-        <form onSubmit={submitSignup}>
-            <input type="text" id="username" placeholder="username" />
-            <input type="password" id="password" placeholder="password" />
-            <button type="submit">Signup</button>
+        <form className="mx-auto col-xl-3 col-lg-5 col-md-6 col-sm-8" onSubmit={submitSignup}>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="username" placeholder="username" />
+            </div>
+            <div class="mb-3">
+                <input type="password" class="form-control" id="password" placeholder="password" minLength="6" />
+            </div>
+            <button type="submit" class="btn btn-primary mx-auto" id="submit" style={{ display: 'block', width: '100%' }}>Signup</button>
         </form>
-
     </>
 }
 
