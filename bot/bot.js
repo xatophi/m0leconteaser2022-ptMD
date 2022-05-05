@@ -19,7 +19,7 @@ async function visit(url) {
             '--no-sandbox',
             '--safebrowsing-disable-auto-update'
         ],
-        executablePath: '/usr/bin/google-chrome'
+        executablePath: '/usr/bin/chromium'
     })
 
 
@@ -41,7 +41,6 @@ async function visit(url) {
 
         //await page.waitForNavigation({ waitUntil: 'networkidle2' })
         console.log(await page.cookies())
-
 
         // visit URL after auth
         await page.goto(url, { timeout: 5000 })
