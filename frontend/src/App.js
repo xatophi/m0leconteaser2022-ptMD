@@ -19,31 +19,33 @@ function App() {
   const [CSRFToken, setCSRFToken] = useState(undefined);
   const [errorFetchDoc, setErrorFetchDoc] = useState(undefined);
 
-  useEffect(() => {
-    async function fetchCSRFToken() {
-      const r = await fetch('/api/getCSRFToken')
-      const j = await r.json()
-      if (r.status === 200) {
-        setCSRFToken(j.CSRFToken)
-      }
-    }
-    fetchCSRFToken()
-  }, [])
-
   let location = useLocation()
   React.useEffect(() => {
-    async function fetchDocuments() {
-      const r = await fetch('/api/document')
-      const j = await r.json()
-      if (r.status === 200) {
-        setErrorFetchDoc(undefined)
-        setDocuments(j)
-      } else {
-        setErrorFetchDoc(j.error || 'failed to fetch documents')
+    (async () => {
+      async function fetchCSRFToken() {
+        const r = await fetch('/api/getCSRFToken')
+        const j = await r.json()
+        if (r.status === 200) {
+          setCSRFToken(j.CSRFToken)
+        }
       }
-    }
-    fetchDocuments()
-  }, [location])
+      async function fetchDocuments() {
+        const r = await fetch('/api/document')
+        const j = await r.json()
+        if (r.status === 200) {
+          setErrorFetchDoc(undefined)
+          setDocuments(j)
+        } else {
+          setErrorFetchDoc(j.error || 'failed to fetch documents')
+        }
+      }
+
+      if (!CSRFToken) {
+        await fetchCSRFToken()
+      }
+      fetchDocuments()
+    })()
+  }, [location, CSRFToken])
 
   return <>
     <Navbar />
