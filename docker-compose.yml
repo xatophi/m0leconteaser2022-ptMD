@@ -9,7 +9,7 @@ services:
     environment:
       - BOT_URL=http://bot:9999/visit
       - WEBAPP_URL=http://nginx
-      - FLAG=ptm{test}
+      - FLAG=ptm{Markd0wn_1s_s0o0o0_e4sy!}
       - ADMIN_PASSWORD=1f0b772d-4569-40a1-8ddf-d42b84f8aa1f
   bot:
     build: ./bot

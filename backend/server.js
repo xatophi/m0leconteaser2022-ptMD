@@ -11,7 +11,7 @@ const { open } = require('sqlite')
 const app = express()
 const port = 4000
 
-JWT_SECRET_KEY = uuidv4()
+const JWT_SECRET_KEY = uuidv4()
 
 let db = undefined;
 
@@ -51,12 +51,6 @@ app.use((req, res, next) => {
             res.clearCookie('session')
         }
     }
-    next()
-})
-
-app.use((req, res, next) => {
-    // TODO lo lascio? non si dovrebbe poter exploitare senza ma sarebbe divertente
-    res.setHeader('X-Content-Type-Options', 'nosniff')
     next()
 })
 
